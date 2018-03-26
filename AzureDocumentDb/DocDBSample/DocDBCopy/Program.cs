@@ -4,7 +4,7 @@
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
-
+    using System.Threading.Tasks;
     using Core;
     using DocDBCopy.Model;
 
@@ -22,16 +22,17 @@
             var inputPath = Path.Combine(basePath, DataPath);
 
             var contents = CsvUtility.ReadAllLines<Sample>(inputPath);
-
             var groups = contents.GroupBy(col => col.Column1);
+            var client = new DocumentDbClient(Endpoint, PrimaryKey);
 
-            using (var client = new DocumentDbClient(Endpoint, PrimaryKey))
+            foreach (var group in groups)
             {
-                // TODO : consider TPL for faster creation.
-                foreach (var group in groups)
+                var newTask = new Task(() =>
                 {
                     client.CreateDocument(DatabaseName, CollectionName, BuildDocument(group));
-                }
+                });
+
+                newTask.Start();
             }
 
             Console.ReadLine();

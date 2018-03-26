@@ -1,6 +1,7 @@
 ﻿namespace Core
 {
     using System;
+    using System.Threading.Tasks;
     using Microsoft.Azure.Documents;
     using Microsoft.Azure.Documents.Client;
 
@@ -21,13 +22,14 @@
                 throw new ObjectDisposedException("Client have been disposed.");
             }
 
-            this.client
-                .CreateDocumentAsync(UriFactory.CreateDocumentCollectionUri(databaseName, collectionName), document)
-                .ContinueWith(
-                    task =>
-                    {
-                        return task.Result;
-                    });
+            CreateDocumentAsync(databaseName, collectionName, document).Wait();
+        }
+
+        private async Task CreateDocumentAsync(string databaseName, string collectionName, object document)
+        {
+            Console.WriteLine("creating document...");
+            await this.client.CreateDocumentAsync(UriFactory.CreateDocumentCollectionUri(databaseName, collectionName), document);
+            Console.WriteLine("created document.");
         }
 
         public T ReadDocument<T>(string databaseName, string collectionName, string documentId)
