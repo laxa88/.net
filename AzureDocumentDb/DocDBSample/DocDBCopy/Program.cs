@@ -27,9 +27,9 @@
             var contents = CsvUtility.ReadAllLines<Sample>(inputPath);
             var groups = contents.GroupBy(col => col.Column1);
             var client = new DocumentDbClient(Endpoint, PrimaryKey);
-            var fullCollect = false;
+            var fullCollect = true;
 
-            var reps = 100;
+            var reps = 30;
             long memory = 0;
             var initialMemory = GC.GetTotalMemory(fullCollect);
             Console.WriteLine($"### memory: {initialMemory}, {timer.ElapsedMilliseconds}");
@@ -38,12 +38,12 @@
             //Parallel.For(0, reps, (index) =>
             //{
             //    memory = GC.GetTotalMemory(fullCollect) - initialMemory;
-            //    Console.WriteLine($"START {index} memory: {memory}, {timer.Elapsed}");
+            //    Console.WriteLine($"START {index} memory: {memory}, {timer.ElapsedMilliseconds}");
 
             //    client.CreateDocument(DatabaseName, CollectionName, BuildDocument(groups.FirstOrDefault()));
 
             //    memory = GC.GetTotalMemory(fullCollect) - initialMemory;
-            //    Console.WriteLine($"DONE {index} memory: {memory}, {timer.Elapsed}");
+            //    Console.WriteLine($"DONE {index} memory: {memory}, {timer.ElapsedMilliseconds}");
             //});
 
             // concurrent
