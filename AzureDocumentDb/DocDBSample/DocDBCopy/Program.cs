@@ -18,22 +18,58 @@
 
         public static void Main(string[] args)
         {
+            var timer = new System.Diagnostics.Stopwatch();
+            timer.Start();
+
             var basePath = Directory.GetCurrentDirectory();
             var inputPath = Path.Combine(basePath, DataPath);
 
             var contents = CsvUtility.ReadAllLines<Sample>(inputPath);
             var groups = contents.GroupBy(col => col.Column1);
             var client = new DocumentDbClient(Endpoint, PrimaryKey);
+            var fullCollect = false;
 
-            foreach (var group in groups)
-            {
-                var newTask = new Task(() =>
-                {
-                    client.CreateDocument(DatabaseName, CollectionName, BuildDocument(group));
-                });
+            var reps = 100;
+            long memory = 0;
+            var initialMemory = GC.GetTotalMemory(fullCollect);
+            Console.WriteLine($"### memory: {initialMemory}, {timer.ElapsedMilliseconds}");
 
-                newTask.Start();
-            }
+            // parallel
+            //Parallel.For(0, reps, (index) =>
+            //{
+            //    memory = GC.GetTotalMemory(fullCollect) - initialMemory;
+            //    Console.WriteLine($"START {index} memory: {memory}, {timer.Elapsed}");
+
+            //    client.CreateDocument(DatabaseName, CollectionName, BuildDocument(groups.FirstOrDefault()));
+
+            //    memory = GC.GetTotalMemory(fullCollect) - initialMemory;
+            //    Console.WriteLine($"DONE {index} memory: {memory}, {timer.Elapsed}");
+            //});
+
+            // concurrent
+            //for (var i = 0; i < reps; i++)
+            //{
+            //    var index = i;
+
+            //    memory = GC.GetTotalMemory(fullCollect) - initialMemory;
+            //    Console.WriteLine($"START {index} memory: {memory}, {timer.ElapsedMilliseconds}");
+
+            //    var newTask = new Task(() =>
+            //    {
+            //        client.CreateDocument(DatabaseName, CollectionName, BuildDocument(groups.FirstOrDefault()));
+            //    });
+
+            //    newTask.Start();
+
+            //    newTask.ContinueWith((t) =>
+            //    {
+            //        memory = GC.GetTotalMemory(fullCollect) - initialMemory;
+            //        Console.WriteLine($"DONE {index} memory: {memory}, {timer.ElapsedMilliseconds}");
+            //    });
+            //}
+
+            memory = GC.GetTotalMemory(fullCollect) - initialMemory;
+            Console.WriteLine($"### memory: {memory}, {timer.ElapsedMilliseconds}");
 
             Console.ReadLine();
         }
