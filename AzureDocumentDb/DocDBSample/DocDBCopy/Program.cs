@@ -35,12 +35,12 @@
             Console.WriteLine($"### memory: {initialMemory}, {timer.ElapsedMilliseconds}");
 
             // parallel
-            //Parallel.For(0, reps, (index) =>
+            //Parallel.ForEach(groups, (group, state, index) =>
             //{
             //    memory = GC.GetTotalMemory(fullCollect) - initialMemory;
             //    Console.WriteLine($"START {index} memory: {memory}, {timer.ElapsedMilliseconds}");
 
-            //    client.CreateDocument(DatabaseName, CollectionName, BuildDocument(groups.FirstOrDefault()));
+            //    client.CreateDocument(DatabaseName, CollectionName, BuildDocument(group));
 
             //    memory = GC.GetTotalMemory(fullCollect) - initialMemory;
             //    Console.WriteLine($"DONE {index} memory: {memory}, {timer.ElapsedMilliseconds}");
