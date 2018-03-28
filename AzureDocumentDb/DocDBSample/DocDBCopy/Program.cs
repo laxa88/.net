@@ -47,16 +47,17 @@
             //});
 
             // concurrent
-            //for (var i = 0; i < reps; i++)
+            //for (var i = 0; i < groups.Count(); i++)
             //{
             //    var index = i;
+            //    var group = groups.ElementAt(index);
 
             //    memory = GC.GetTotalMemory(fullCollect) - initialMemory;
             //    Console.WriteLine($"START {index} memory: {memory}, {timer.ElapsedMilliseconds}");
 
             //    var newTask = new Task(() =>
             //    {
-            //        client.CreateDocument(DatabaseName, CollectionName, BuildDocument(groups.FirstOrDefault()));
+            //        client.CreateDocument(DatabaseName, CollectionName, BuildDocument(group));
             //    });
 
             //    newTask.Start();
