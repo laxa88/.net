@@ -29,7 +29,6 @@
             var client = new DocumentDbClient(Endpoint, PrimaryKey);
             var fullCollect = true;
 
-            var reps = 30;
             long memory = 0;
             var initialMemory = GC.GetTotalMemory(fullCollect);
             Console.WriteLine($"### memory: {initialMemory}, {timer.ElapsedMilliseconds}");
